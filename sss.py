@@ -8,12 +8,12 @@ from typing import Dict, List, Optional
 # Page configuration
 st.set_page_config(
     page_title="SSS Jewelry Calculator",
-    page_icon="💍",
+    page_icon="💎",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for better styling
+# Custom CSS for better styling and mobile responsiveness
 st.markdown("""
 <style>
     .main > div {
@@ -113,15 +113,20 @@ st.markdown("""
         font-family: monospace;
     }
     
-    .number-pad {
+    /* Mobile-friendly number pad using CSS Grid */
+    .number-pad-container {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
         margin: 20px 0;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
-    .number-button {
-        padding: 20px;
+    .number-pad-btn {
+        aspect-ratio: 1;
+        min-height: 60px;
         border: none;
         border-radius: 12px;
         background-color: #f3f4f6;
@@ -130,21 +135,24 @@ st.markdown("""
         cursor: pointer;
         transition: all 0.2s;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
-    .number-button:hover {
+    .number-pad-btn:hover {
         background-color: #e5e7eb;
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
     
-    .delete-button {
-        background-color: #006a50 !important;
-        color: white !important;
+    .number-pad-btn.delete {
+        background-color: #006a50;
+        color: white;
     }
     
-    .delete-button:hover {
-        background-color: #004d3a !important;
+    .number-pad-btn.delete:hover {
+        background-color: #004d3a;
     }
     
     .peacock-green {
@@ -161,20 +169,45 @@ st.markdown("""
         font-weight: 600;
     }
     
-    /* Make number pad buttons more prominent */
-    .element-container:has(.number-pad-btn) button {
-        height: 60px !important;
-        font-size: 18px !important;
-        font-weight: 800 !important;
-        background: #f3f4f6 !important;
-        border: 2px solid #e5e7eb !important;
-        border-radius: 12px !important;
+    /* Responsive design for mobile */
+    @media (max-width: 768px) {
+        .main > div {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        
+        .number-pad-container {
+            max-width: 250px;
+            gap: 8px;
+        }
+        
+        .number-pad-btn {
+            min-height: 50px;
+            font-size: 18px;
+        }
+        
+        .stTabs [data-baseweb="tab"] {
+            padding-left: 10px;
+            padding-right: 10px;
+            height: 45px;
+            font-size: 14px;
+        }
+        
+        .header-title {
+            padding: 10px 15px;
+        }
+        
+        .header-title h1 {
+            font-size: 24px;
+        }
     }
     
-    .element-container:has(.number-pad-btn) button:hover {
-        background: #e5e7eb !important;
-        border-color: #1e3a8a !important;
-        transform: translateY(-1px);
+    /* Force Streamlit columns to work better on mobile */
+    @media (max-width: 640px) {
+        .element-container .row-widget.stSelectbox,
+        .element-container .row-widget.stNumberInput {
+            width: 100% !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -321,10 +354,75 @@ def calculate_total():
     except:
         return None
 
-def create_number_pad_button(num, key_suffix=""):
-    """Create a styled number pad button"""
-    return st.button(str(num), key=f"num_{num}{key_suffix}", use_container_width=True, 
-                    help=f"Add {num}", type="secondary")
+def create_mobile_number_pad():
+    """Create a mobile-friendly number pad using HTML/CSS grid"""
+    
+    # Create the number pad HTML
+    number_pad_html = """
+    <div class="number-pad-container">
+    """
+    
+    # Numbers 1-9
+    for i in range(1, 10):
+        number_pad_html += f'<div class="number-pad-btn" onclick="addToWeight(\'{i}\')">{i}</div>'
+    
+    # Bottom row: decimal, 0, backspace
+    number_pad_html += '''
+        <div class="number-pad-btn" onclick="addDecimal()">.</div>
+        <div class="number-pad-btn" onclick="addToWeight('0')">0</div>
+        <div class="number-pad-btn delete" onclick="backspace()">⌫</div>
+    </div>
+    
+    <script>
+    function addToWeight(num) {
+        const event = new CustomEvent('streamlit:setComponentValue', {
+            detail: {
+                key: 'number_pad_action',
+                value: 'add_' + num
+            }
+        });
+        window.dispatchEvent(event);
+        // Also trigger a rerun by clicking a hidden button
+        setTimeout(() => {
+            const buttons = parent.document.querySelectorAll('button');
+            const hiddenButton = Array.from(buttons).find(btn => btn.textContent.includes('_trigger_rerun'));
+            if (hiddenButton) hiddenButton.click();
+        }, 50);
+    }
+    
+    function addDecimal() {
+        const event = new CustomEvent('streamlit:setComponentValue', {
+            detail: {
+                key: 'number_pad_action',
+                value: 'add_decimal'
+            }
+        });
+        window.dispatchEvent(event);
+        setTimeout(() => {
+            const buttons = parent.document.querySelectorAll('button');
+            const hiddenButton = Array.from(buttons).find(btn => btn.textContent.includes('_trigger_rerun'));
+            if (hiddenButton) hiddenButton.click();
+        }, 50);
+    }
+    
+    function backspace() {
+        const event = new CustomEvent('streamlit:setComponentValue', {
+            detail: {
+                key: 'number_pad_action',
+                value: 'backspace'
+            }
+        });
+        window.dispatchEvent(event);
+        setTimeout(() => {
+            const buttons = parent.document.querySelectorAll('button');
+            const hiddenButton = Array.from(buttons).find(btn => btn.textContent.includes('_trigger_rerun'));
+            if (hiddenButton) hiddenButton.click();
+        }, 50);
+    }
+    </script>
+    '''
+    
+    st.markdown(number_pad_html, unsafe_allow_html=True)
 
 def calculator_tab():
     """Calculator tab content"""
@@ -375,13 +473,13 @@ def calculator_tab():
                 st.session_state.include_gst = gst_toggle
                 st.rerun()
         
-        # Number Pad with enhanced styling
+        # Number Pad - Using traditional Streamlit buttons for better reliability
         st.markdown("### Number Pad")
         
-        # Add CSS class for number pad buttons
-        st.markdown('<div class="number-pad">', unsafe_allow_html=True)
+        # Create number pad with proper mobile layout
+        st.markdown('<div style="max-width: 300px; margin: 0 auto;">', unsafe_allow_html=True)
         
-        # Create 3x3 grid for numbers 1-9
+        # Numbers 1-9 in 3x3 grid
         for row in range(3):
             cols = st.columns(3)
             for col_idx in range(3):
@@ -524,15 +622,13 @@ def wages_tab():
                 else:
                     st.markdown('<div class="wages-item">', unsafe_allow_html=True)
                 
-                cols = st.columns([1, 3, 2, 1, 1])
+                # Use single column layout on mobile
+                st.write(f"**{wage['srNo']}. {wage['material']}**")
                 
-                with cols[0]:
-                    st.write(f"**{wage['srNo']}**")
-                
-                with cols[1]:
-                    new_material = st.text_input("", value=wage["material"], 
-                                               key=f"material_{wage['id']}", 
-                                               label_visibility="collapsed")
+                col1_wage, col2_wage = st.columns([2, 1])
+                with col1_wage:
+                    new_material = st.text_input("Item Name", value=wage["material"], 
+                                               key=f"material_{wage['id']}")
                     if new_material != wage["material"]:
                         st.session_state.wages_list[i]["material"] = new_material
                         if is_selected:
@@ -540,10 +636,9 @@ def wages_tab():
                         save_data("wages_list", st.session_state.wages_list)
                         st.rerun()
                 
-                with cols[2]:
-                    new_rate = st.number_input("", value=wage["rate"], min_value=1,
-                                             key=f"rate_{wage['id']}", 
-                                             label_visibility="collapsed")
+                with col2_wage:
+                    new_rate = st.number_input("Amount ₹", value=wage["rate"], min_value=1,
+                                             key=f"rate_{wage['id']}")
                     if new_rate != wage["rate"]:
                         st.session_state.wages_list[i]["rate"] = new_rate
                         if is_selected:
@@ -551,12 +646,14 @@ def wages_tab():
                         save_data("wages_list", st.session_state.wages_list)
                         st.rerun()
                 
-                with cols[3]:
-                    if st.button("Select", key=f"select_{wage['id']}", disabled=is_selected):
+                # Action buttons
+                button_col1, button_col2 = st.columns(2)
+                with button_col1:
+                    if st.button("Select", key=f"select_{wage['id']}", disabled=is_selected, use_container_width=True):
                         st.session_state.selected_wage = wage.copy()
                         st.rerun()
                 
-                with cols[4]:
+                with button_col2:
                     if len(st.session_state.wages_list) > 1:
                         # Custom CSS for delete button
                         delete_css = f"""
@@ -571,7 +668,7 @@ def wages_tab():
                         </style>
                         """
                         st.markdown(delete_css, unsafe_allow_html=True)
-                        if st.button("Delete", key=f"delete_{wage['id']}"):
+                        if st.button("Delete", key=f"delete_{wage['id']}", use_container_width=True):
                             st.session_state.wages_list = [w for w in st.session_state.wages_list if w["id"] != wage["id"]]
                             # Reorder serial numbers
                             for j, w in enumerate(st.session_state.wages_list):
@@ -585,62 +682,11 @@ def wages_tab():
                             st.rerun()
                 
                 st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown("---")
         
         # Selected wage info
         if st.session_state.selected_wage:
-            st.markdown("---")
             st.info(f"**Selected:** {st.session_state.selected_wage['material']} (Amount: ₹{st.session_state.selected_wage['rate']})")
-
-def create_price_number_pad(input_key, current_value):
-    """Create number pad for price inputs"""
-    st.markdown("#### Number Pad")
-    
-    # Create 3x3 grid for numbers 1-9
-    for row in range(3):
-        cols = st.columns(3)
-        for col_idx in range(3):
-            num = row * 3 + col_idx + 1
-            with cols[col_idx]:
-                if st.button(str(num), key=f"price_num_{num}_{input_key}", use_container_width=True, type="secondary"):
-                    if current_value == 0:
-                        return float(str(num))
-                    else:
-                        return float(str(current_value) + str(num))
-    
-    # Bottom row: decimal, 0, backspace
-    cols = st.columns(3)
-    with cols[0]:
-        if st.button(".", key=f"price_decimal_{input_key}", use_container_width=True, type="secondary"):
-            if "." not in str(current_value):
-                return float(str(current_value) + ".")
-    with cols[1]:
-        if st.button("0", key=f"price_zero_{input_key}", use_container_width=True, type="secondary"):
-            if current_value != 0:
-                return float(str(current_value) + "0")
-            else:
-                return 0.0
-    with cols[2]:
-        # Use peacock green for delete button
-        delete_css = f"""
-        <style>
-        .element-container:has(#price_backspace_{input_key}) button {{
-            background-color: #006a50 !important;
-            color: white !important;
-        }}
-        .element-container:has(#price_backspace_{input_key}) button:hover {{
-            background-color: #004d3a !important;
-        }}
-        </style>
-        """
-        st.markdown(delete_css, unsafe_allow_html=True)
-        if st.button("⌫", key=f"price_backspace_{input_key}", use_container_width=True):
-            current_str = str(current_value)
-            if len(current_str) > 1:
-                return float(current_str[:-1]) if current_str[:-1] != '' else 0.0
-            else:
-                return 0.0
-    
-    return current_value
 
 def prices_tab():
     """Prices tab content"""
@@ -669,7 +715,10 @@ def prices_tab():
         # Number input field
         new_value = st.number_input("Enter new price:", value=current_value, min_value=0.0, step=1.0, key=f"price_input_{price_key}")
         
-        # Number pad for price input
+        # Number pad for price input - mobile friendly
+        st.markdown("### Number Pad")
+        st.markdown('<div style="max-width: 300px; margin: 0 auto;">', unsafe_allow_html=True)
+        
         for row in range(3):
             cols = st.columns(3)
             for col_idx in range(3):
@@ -725,6 +774,8 @@ def prices_tab():
                 st.session_state.prices[price_key] = new_value
                 save_data("daily_prices", st.session_state.prices)
                 st.rerun()
+        
+        st.markdown('</div>', unsafe_allow_html=True)
         
         # Update price if changed through number input
         if new_value != st.session_state.prices[price_key]:
@@ -793,10 +844,10 @@ def history_tab():
                 
                 st.markdown(f'''
                 <div class="history-item">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
                         <span style="background-color: {'#fef3c7' if entry['material'] == 'gold' else '#f3f4f6'}; 
                                    color: {'#92400e' if entry['material'] == 'gold' else '#374151'}; 
-                                   padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">
+                                   padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: 600; margin-bottom: 5px;">
                             {entry["material"].upper()} {entry["weight"]}g
                         </span>
                         <span style="font-size: 20px; font-weight: bold;">₹{entry["total"]:,.0f}</span>
