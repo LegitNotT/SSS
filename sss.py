@@ -53,8 +53,10 @@ st.markdown("""
     }
     
     .result-card {
-        background: rgba(240, 253, 250, 0.3);
-        border: 1px solid rgba(20, 184, 166, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         padding: 20px;
         border-radius: 15px;
         text-align: center;
@@ -89,7 +91,7 @@ st.markdown("""
         background-color: #f9fafb;
         padding: 15px;
         border-radius: 10px;
-        margin: 5px 0;
+        margin: 10px 0;
         border: 2px solid transparent;
     }
     
@@ -107,52 +109,69 @@ st.markdown("""
         margin-bottom: 20px;
     }
     
-    div[data-testid="stNumberInput"] > div > div > input {
-        font-size: 24px;
-        text-align: center;
-        font-family: monospace;
+    .header-title h1 {
+        font-size: 32px;
+        font-weight: bold;
+        margin: 0;
     }
     
-    /* Mobile-friendly number pad using CSS Grid */
-    .number-pad-container {
+    .header-title h1 .small {
+        font-size: 20px;
+        font-weight: 500;
+    }
+    
+    /* GST Toggle Enhancement */
+    .gst-section {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+    }
+    
+    .gst-label {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e3a8a;
+    }
+    
+    /* Enhanced toggle styling */
+    div[data-testid="stToggle"] > div {
+        transform: scale(1.3);
+    }
+    
+    div[data-testid="stNumberInput"] > div > div > input {
+        font-size: 18px;
+        text-align: center;
+        font-family: monospace;
+        padding: 12px;
+    }
+    
+    /* Number pad improvements for mobile */
+    .number-pad-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
+        gap: 12px;
         margin: 20px 0;
         max-width: 300px;
         margin-left: auto;
         margin-right: auto;
     }
     
-    .number-pad-btn {
+    .number-btn {
         aspect-ratio: 1;
         min-height: 60px;
-        border: none;
-        border-radius: 12px;
-        background-color: #f3f4f6;
         font-size: 20px;
-        font-weight: 800;
-        cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        font-weight: 700;
+        border-radius: 12px;
+        transition: all 0.1s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     
-    .number-pad-btn:hover {
-        background-color: #e5e7eb;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-    
-    .number-pad-btn.delete {
-        background-color: #006a50;
-        color: white;
-    }
-    
-    .number-pad-btn.delete:hover {
-        background-color: #004d3a;
+    .number-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     
     .peacock-green {
@@ -164,25 +183,42 @@ st.markdown("""
         background-color: #004d3a !important;
     }
     
+    /* Price input styling */
+    .price-input-section {
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(29, 78, 216, 0.1));
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(30, 58, 138, 0.2);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px 0;
+    }
+    
     /* Custom button styling */
     .stButton > button {
         font-weight: 600;
+        transition: all 0.2s ease;
     }
     
-    /* Responsive design for mobile */
+    .stButton > button:hover {
+        transform: translateY(-1px);
+    }
+    
+    /* Force number pad to stay in 3 columns on mobile */
     @media (max-width: 768px) {
         .main > div {
             padding-left: 1rem;
             padding-right: 1rem;
         }
         
-        .number-pad-container {
-            max-width: 250px;
-            gap: 8px;
+        .number-pad-grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 10px;
+            max-width: 280px;
         }
         
-        .number-pad-btn {
-            min-height: 50px;
+        .number-btn {
+            min-height: 55px;
             font-size: 18px;
         }
         
@@ -198,16 +234,39 @@ st.markdown("""
         }
         
         .header-title h1 {
-            font-size: 24px;
+            font-size: 28px;
+        }
+        
+        .header-title h1 .small {
+            font-size: 18px;
+        }
+        
+        .gst-label {
+            font-size: 16px;
         }
     }
     
-    /* Force Streamlit columns to work better on mobile */
+    /* Ensure columns don't break on small screens */
     @media (max-width: 640px) {
         .element-container .row-widget.stSelectbox,
         .element-container .row-widget.stNumberInput {
             width: 100% !important;
         }
+        
+        /* Force grid layout even on smallest screens */
+        .stColumns > div[data-testid="column"] {
+            width: calc(33.333% - 8px) !important;
+            min-width: 80px !important;
+        }
+    }
+    
+    /* Remove extra spacing in wages section */
+    .element-container {
+        margin-bottom: 8px !important;
+    }
+    
+    .stMarkdown {
+        margin-bottom: 8px !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -292,26 +351,35 @@ def daily_price_input():
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
+        st.markdown('<div class="price-input-section">', unsafe_allow_html=True)
         st.markdown("### Gold Prices")
         gold_without_gst = st.number_input("Gold Price (without GST) ₹/gram", 
-                                          value=st.session_state.prices["goldWithoutGST"],
-                                          min_value=0.0, step=1.0, key="gold_no_gst_input")
+                                          value=None if st.session_state.prices["goldWithoutGST"] == 0 else st.session_state.prices["goldWithoutGST"],
+                                          placeholder="Enter gold price without GST",
+                                          min_value=0.0, step=0.01, key="gold_no_gst_input")
         
         gold_with_gst = st.number_input("Gold Price (with GST) ₹/gram", 
-                                       value=st.session_state.prices["goldWithGST"],
-                                       min_value=0.0, step=1.0, key="gold_gst_input")
+                                       value=None if st.session_state.prices["goldWithGST"] == 0 else st.session_state.prices["goldWithGST"],
+                                       placeholder="Enter gold price with GST",
+                                       min_value=0.0, step=0.01, key="gold_gst_input")
+        st.markdown('</div>', unsafe_allow_html=True)
         
+        st.markdown('<div class="price-input-section">', unsafe_allow_html=True)
         st.markdown("### Silver Prices")
         silver_without_gst = st.number_input("Silver Price (without GST) ₹/gram", 
-                                            value=st.session_state.prices["silverWithoutGST"],
-                                            min_value=0.0, step=1.0, key="silver_no_gst_input")
+                                            value=None if st.session_state.prices["silverWithoutGST"] == 0 else st.session_state.prices["silverWithoutGST"],
+                                            placeholder="Enter silver price without GST",
+                                            min_value=0.0, step=0.01, key="silver_no_gst_input")
         
         silver_with_gst = st.number_input("Silver Price (with GST) ₹/gram", 
-                                         value=st.session_state.prices["silverWithGST"],
-                                         min_value=0.0, step=1.0, key="silver_gst_input")
+                                         value=None if st.session_state.prices["silverWithGST"] == 0 else st.session_state.prices["silverWithGST"],
+                                         placeholder="Enter silver price with GST",
+                                         min_value=0.0, step=0.01, key="silver_gst_input")
+        st.markdown('</div>', unsafe_allow_html=True)
         
         if st.button("Continue", type="primary", use_container_width=True):
-            if all([gold_without_gst > 0, gold_with_gst > 0, silver_without_gst > 0, silver_with_gst > 0]):
+            if all([gold_without_gst and gold_without_gst > 0, gold_with_gst and gold_with_gst > 0, 
+                   silver_without_gst and silver_without_gst > 0, silver_with_gst and silver_with_gst > 0]):
                 st.session_state.prices = {
                     "goldWithoutGST": gold_without_gst,
                     "goldWithGST": gold_with_gst,
@@ -354,75 +422,12 @@ def calculate_total():
     except:
         return None
 
-def create_mobile_number_pad():
-    """Create a mobile-friendly number pad using HTML/CSS grid"""
-    
-    # Create the number pad HTML
-    number_pad_html = """
-    <div class="number-pad-container">
-    """
-    
-    # Numbers 1-9
-    for i in range(1, 10):
-        number_pad_html += f'<div class="number-pad-btn" onclick="addToWeight(\'{i}\')">{i}</div>'
-    
-    # Bottom row: decimal, 0, backspace
-    number_pad_html += '''
-        <div class="number-pad-btn" onclick="addDecimal()">.</div>
-        <div class="number-pad-btn" onclick="addToWeight('0')">0</div>
-        <div class="number-pad-btn delete" onclick="backspace()">⌫</div>
-    </div>
-    
-    <script>
-    function addToWeight(num) {
-        const event = new CustomEvent('streamlit:setComponentValue', {
-            detail: {
-                key: 'number_pad_action',
-                value: 'add_' + num
-            }
-        });
-        window.dispatchEvent(event);
-        // Also trigger a rerun by clicking a hidden button
-        setTimeout(() => {
-            const buttons = parent.document.querySelectorAll('button');
-            const hiddenButton = Array.from(buttons).find(btn => btn.textContent.includes('_trigger_rerun'));
-            if (hiddenButton) hiddenButton.click();
-        }, 50);
-    }
-    
-    function addDecimal() {
-        const event = new CustomEvent('streamlit:setComponentValue', {
-            detail: {
-                key: 'number_pad_action',
-                value: 'add_decimal'
-            }
-        });
-        window.dispatchEvent(event);
-        setTimeout(() => {
-            const buttons = parent.document.querySelectorAll('button');
-            const hiddenButton = Array.from(buttons).find(btn => btn.textContent.includes('_trigger_rerun'));
-            if (hiddenButton) hiddenButton.click();
-        }, 50);
-    }
-    
-    function backspace() {
-        const event = new CustomEvent('streamlit:setComponentValue', {
-            detail: {
-                key: 'number_pad_action',
-                value: 'backspace'
-            }
-        });
-        window.dispatchEvent(event);
-        setTimeout(() => {
-            const buttons = parent.document.querySelectorAll('button');
-            const hiddenButton = Array.from(buttons).find(btn => btn.textContent.includes('_trigger_rerun'));
-            if (hiddenButton) hiddenButton.click();
-        }, 50);
-    }
-    </script>
-    '''
-    
-    st.markdown(number_pad_html, unsafe_allow_html=True)
+def add_to_weight(value):
+    """Add value to weight with instant update"""
+    if st.session_state.weight == "0":
+        st.session_state.weight = str(value)
+    else:
+        st.session_state.weight += str(value)
 
 def calculator_tab():
     """Calculator tab content"""
@@ -434,16 +439,18 @@ def calculator_tab():
         material_col1, material_col2 = st.columns(2)
         
         with material_col1:
-            if st.button("Gold", type="primary" if st.session_state.material == "gold" else "secondary", use_container_width=True):
+            if st.button("Gold", type="primary" if st.session_state.material == "gold" else "secondary", 
+                        use_container_width=True, key="gold_btn"):
                 st.session_state.material = "gold"
                 st.rerun()
         
         with material_col2:
-            if st.button("Silver", type="primary" if st.session_state.material == "silver" else "secondary", use_container_width=True):
+            if st.button("Silver", type="primary" if st.session_state.material == "silver" else "secondary", 
+                        use_container_width=True, key="silver_btn"):
                 st.session_state.material = "silver"
                 st.rerun()
         
-        # Result Display (moved to top)
+        # Result Display
         result = calculate_total()
         if result:
             st.markdown(f'''
@@ -463,64 +470,58 @@ def calculator_tab():
             st.session_state.weight = weight_input
             st.rerun()
         
-        # GST Toggle
+        # GST Toggle - Enhanced
+        st.markdown('<div class="gst-section">', unsafe_allow_html=True)
         gst_col1, gst_col2 = st.columns([3, 1])
         with gst_col1:
-            st.write("**Include GST**")
+            st.markdown('<div class="gst-label">Include GST</div>', unsafe_allow_html=True)
         with gst_col2:
             gst_toggle = st.toggle("", value=st.session_state.include_gst, key="gst_toggle")
             if gst_toggle != st.session_state.include_gst:
                 st.session_state.include_gst = gst_toggle
                 st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
         
-        # Number Pad - Using traditional Streamlit buttons for better reliability
+        # Number Pad - Fixed for mobile
         st.markdown("### Number Pad")
+        st.markdown('<div class="number-pad-grid">', unsafe_allow_html=True)
         
-        # Create number pad with proper mobile layout
-        st.markdown('<div style="max-width: 300px; margin: 0 auto;">', unsafe_allow_html=True)
-        
-        # Numbers 1-9 in 3x3 grid
+        # Use manual grid creation to ensure 3 columns always
         for row in range(3):
             cols = st.columns(3)
             for col_idx in range(3):
                 num = row * 3 + col_idx + 1
                 with cols[col_idx]:
-                    if st.button(str(num), key=f"num_{num}", use_container_width=True, type="secondary"):
-                        if st.session_state.weight == "0":
-                            st.session_state.weight = str(num)
-                        else:
-                            st.session_state.weight += str(num)
+                    button_key = f"num_{num}_{id(st.session_state)}"
+                    if st.button(str(num), key=button_key, use_container_width=True, type="secondary"):
+                        add_to_weight(num)
                         st.rerun()
         
-        # Bottom row: decimal, 0, backspace
+        # Bottom row
         cols = st.columns(3)
         with cols[0]:
-            if st.button(".", key="decimal", use_container_width=True, type="secondary"):
+            if st.button(".", key=f"decimal_{id(st.session_state)}", use_container_width=True, type="secondary"):
                 if "." not in st.session_state.weight:
                     st.session_state.weight += "."
                     st.rerun()
         with cols[1]:
-            if st.button("0", key="zero", use_container_width=True, type="secondary"):
-                if st.session_state.weight != "0":
-                    st.session_state.weight += "0"
-                else:
-                    st.session_state.weight = "0"
+            if st.button("0", key=f"zero_{id(st.session_state)}", use_container_width=True, type="secondary"):
+                add_to_weight("0")
                 st.rerun()
         with cols[2]:
-            # Use peacock green for delete button
-            delete_css = """
+            delete_css = f"""
             <style>
-            .element-container:has(#backspace) button {
+            .element-container:has(#backspace_{id(st.session_state)}) button {{
                 background-color: #006a50 !important;
                 color: white !important;
-            }
-            .element-container:has(#backspace) button:hover {
+            }}
+            .element-container:has(#backspace_{id(st.session_state)}) button:hover {{
                 background-color: #004d3a !important;
-            }
+            }}
             </style>
             """
             st.markdown(delete_css, unsafe_allow_html=True)
-            if st.button("⌫", key="backspace", use_container_width=True):
+            if st.button("⌫", key=f"backspace_{id(st.session_state)}", use_container_width=True):
                 if len(st.session_state.weight) > 1:
                     st.session_state.weight = st.session_state.weight[:-1]
                 else:
@@ -530,7 +531,7 @@ def calculator_tab():
         st.markdown('</div>', unsafe_allow_html=True)
         
         # Calculate Button
-        if st.button("Calculate", type="primary", use_container_width=True):
+        if st.button("Calculate", type="primary", use_container_width=True, key="calc_btn"):
             if st.session_state.weight and st.session_state.weight != "":
                 result = calculate_total()
                 if result:
@@ -542,12 +543,11 @@ def calculator_tab():
             preview_text = f"({result['weight']}g × ₹{result['pricePerGram']}/g) + ₹{result['wages']} = ₹{result['total']:,.0f}"
             st.markdown(f'<div class="calculation-preview">{preview_text}</div>', unsafe_allow_html=True)
         
-        # Action Buttons (only show when result exists)
+        # Action Buttons
         if st.session_state.result:
             st.markdown("### Actions")
             action_col1, action_col2 = st.columns(2)
             
-            # Custom CSS for action buttons
             action_css = """
             <style>
             .element-container:has(#clear_btn) button {
@@ -576,7 +576,6 @@ def calculator_tab():
             
             with action_col2:
                 if st.button("Save", key="save_btn", use_container_width=True):
-                    # Save to history
                     new_entry = {
                         **st.session_state.result,
                         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -585,21 +584,19 @@ def calculator_tab():
                     st.session_state.history.insert(0, new_entry)
                     save_data("history", st.session_state.history)
                     
-                    # Clear inputs
                     st.session_state.weight = ""
                     st.session_state.result = None
                     st.success("Calculation saved to history!")
                     st.rerun()
 
 def wages_tab():
-    """Wages/Making Charges tab content"""
+    """Wages/Making Charges tab content - Fixed spacing issues"""
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
         st.markdown("### Making Charges")
         
-        # Add new wage entry button
-        if st.button("Add New Entry", type="primary", use_container_width=True):
+        if st.button("Add New Entry", type="primary", use_container_width=True, key="add_wage_btn"):
             new_entry = {
                 "id": len(st.session_state.wages_list) + 1,
                 "srNo": len(st.session_state.wages_list) + 1,
@@ -610,19 +607,18 @@ def wages_tab():
             save_data("wages_list", st.session_state.wages_list)
             st.rerun()
         
-        st.markdown("---")
-        
-        # Display wages list
+        # Display wages list with fixed spacing
         for i, wage in enumerate(st.session_state.wages_list):
             is_selected = st.session_state.selected_wage["id"] == wage["id"]
             
-            with st.container():
+            # Create container without extra spacing
+            container = st.container()
+            with container:
                 if is_selected:
-                    st.markdown('<div class="wages-item selected">', unsafe_allow_html=True)
+                    st.markdown('<div class="wages-item selected" style="margin-top: 5px; margin-bottom: 5px;">', unsafe_allow_html=True)
                 else:
-                    st.markdown('<div class="wages-item">', unsafe_allow_html=True)
+                    st.markdown('<div class="wages-item" style="margin-top: 5px; margin-bottom: 5px;">', unsafe_allow_html=True)
                 
-                # Use single column layout on mobile
                 st.write(f"**{wage['srNo']}. {wage['material']}**")
                 
                 col1_wage, col2_wage = st.columns([2, 1])
@@ -646,7 +642,6 @@ def wages_tab():
                         save_data("wages_list", st.session_state.wages_list)
                         st.rerun()
                 
-                # Action buttons
                 button_col1, button_col2 = st.columns(2)
                 with button_col1:
                     if st.button("Select", key=f"select_{wage['id']}", disabled=is_selected, use_container_width=True):
@@ -655,7 +650,6 @@ def wages_tab():
                 
                 with button_col2:
                     if len(st.session_state.wages_list) > 1:
-                        # Custom CSS for delete button
                         delete_css = f"""
                         <style>
                         .element-container:has(#delete_{wage['id']}) button {{
@@ -670,11 +664,9 @@ def wages_tab():
                         st.markdown(delete_css, unsafe_allow_html=True)
                         if st.button("Delete", key=f"delete_{wage['id']}", use_container_width=True):
                             st.session_state.wages_list = [w for w in st.session_state.wages_list if w["id"] != wage["id"]]
-                            # Reorder serial numbers
                             for j, w in enumerate(st.session_state.wages_list):
                                 w["srNo"] = j + 1
                             
-                            # Update selected wage if deleted
                             if is_selected and st.session_state.wages_list:
                                 st.session_state.selected_wage = st.session_state.wages_list[0]
                             
@@ -682,118 +674,101 @@ def wages_tab():
                             st.rerun()
                 
                 st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown("---")
         
-        # Selected wage info
         if st.session_state.selected_wage:
             st.info(f"**Selected:** {st.session_state.selected_wage['material']} (Amount: ₹{st.session_state.selected_wage['rate']})")
 
 def prices_tab():
-    """Prices tab content"""
+    """Renovated Prices tab - Direct input like landing page"""
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
-        st.markdown("### Current Prices")
+        st.markdown("### Update Daily Prices")
         
-        # Price input selector
-        price_options = {
-            "Gold (without GST)": "goldWithoutGST",
-            "Gold (with GST)": "goldWithGST", 
-            "Silver (without GST)": "silverWithoutGST",
-            "Silver (with GST)": "silverWithGST"
-        }
+        st.markdown('<div class="price-input-section">', unsafe_allow_html=True)
+        st.markdown("#### Gold Prices")
         
-        selected_price = st.selectbox("Select price to edit:", options=list(price_options.keys()))
-        price_key = price_options[selected_price]
+        gold_without_gst = st.number_input(
+            "Gold Price (without GST) ₹/gram", 
+            value=None if st.session_state.prices["goldWithoutGST"] == 0 else st.session_state.prices["goldWithoutGST"],
+            placeholder="Enter gold price without GST",
+            min_value=0.0, 
+            step=0.01, 
+            key="edit_gold_no_gst"
+        )
         
-        st.markdown(f"#### Editing: {selected_price}")
-        
-        # Current value display
-        current_value = st.session_state.prices[price_key]
-        st.markdown(f"**Current Value: ₹{current_value}/gram**")
-        
-        # Number input field
-        new_value = st.number_input("Enter new price:", value=current_value, min_value=0.0, step=1.0, key=f"price_input_{price_key}")
-        
-        # Number pad for price input - mobile friendly
-        st.markdown("### Number Pad")
-        st.markdown('<div style="max-width: 300px; margin: 0 auto;">', unsafe_allow_html=True)
-        
-        for row in range(3):
-            cols = st.columns(3)
-            for col_idx in range(3):
-                num = row * 3 + col_idx + 1
-                with cols[col_idx]:
-                    if st.button(str(num), key=f"price_num_{num}_{price_key}", use_container_width=True, type="secondary"):
-                        if new_value == 0:
-                            new_value = float(str(num))
-                        else:
-                            new_value = float(str(int(new_value)) + str(num))
-                        st.session_state.prices[price_key] = new_value
-                        save_data("daily_prices", st.session_state.prices)
-                        st.rerun()
-        
-        # Bottom row: decimal, 0, backspace
-        cols = st.columns(3)
-        with cols[0]:
-            if st.button(".", key=f"price_decimal_{price_key}", use_container_width=True, type="secondary"):
-                if "." not in str(new_value):
-                    new_value = float(str(int(new_value)) + ".")
-                    st.session_state.prices[price_key] = new_value
-                    save_data("daily_prices", st.session_state.prices)
-                    st.rerun()
-        with cols[1]:
-            if st.button("0", key=f"price_zero_{price_key}", use_container_width=True, type="secondary"):
-                if new_value != 0:
-                    new_value = float(str(int(new_value)) + "0")
-                else:
-                    new_value = 0.0
-                st.session_state.prices[price_key] = new_value
-                save_data("daily_prices", st.session_state.prices)
-                st.rerun()
-        with cols[2]:
-            # Use peacock green for delete button
-            delete_css = f"""
-            <style>
-            .element-container:has(#price_backspace_{price_key}) button {{
-                background-color: #006a50 !important;
-                color: white !important;
-            }}
-            .element-container:has(#price_backspace_{price_key}) button:hover {{
-                background-color: #004d3a !important;
-            }}
-            </style>
-            """
-            st.markdown(delete_css, unsafe_allow_html=True)
-            if st.button("⌫", key=f"price_backspace_{price_key}", use_container_width=True):
-                current_str = str(int(new_value))
-                if len(current_str) > 1:
-                    new_value = float(current_str[:-1]) if current_str[:-1] != '' else 0.0
-                else:
-                    new_value = 0.0
-                st.session_state.prices[price_key] = new_value
-                save_data("daily_prices", st.session_state.prices)
-                st.rerun()
-        
+        gold_with_gst = st.number_input(
+            "Gold Price (with GST) ₹/gram", 
+            value=None if st.session_state.prices["goldWithGST"] == 0 else st.session_state.prices["goldWithGST"],
+            placeholder="Enter gold price with GST",
+            min_value=0.0, 
+            step=0.01, 
+            key="edit_gold_gst"
+        )
         st.markdown('</div>', unsafe_allow_html=True)
         
-        # Update price if changed through number input
-        if new_value != st.session_state.prices[price_key]:
-            st.session_state.prices[price_key] = new_value
-            save_data("daily_prices", st.session_state.prices)
+        st.markdown('<div class="price-input-section">', unsafe_allow_html=True)
+        st.markdown("#### Silver Prices")
+        
+        silver_without_gst = st.number_input(
+            "Silver Price (without GST) ₹/gram", 
+            value=None if st.session_state.prices["silverWithoutGST"] == 0 else st.session_state.prices["silverWithoutGST"],
+            placeholder="Enter silver price without GST",
+            min_value=0.0, 
+            step=0.01, 
+            key="edit_silver_no_gst"
+        )
+        
+        silver_with_gst = st.number_input(
+            "Silver Price (with GST) ₹/gram", 
+            value=None if st.session_state.prices["silverWithGST"] == 0 else st.session_state.prices["silverWithGST"],
+            placeholder="Enter silver price with GST",
+            min_value=0.0, 
+            step=0.01, 
+            key="edit_silver_gst"
+        )
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Update button
+        if st.button("Update Prices", type="primary", use_container_width=True, key="update_prices_btn"):
+            updated = False
+            if gold_without_gst and gold_without_gst != st.session_state.prices["goldWithoutGST"]:
+                st.session_state.prices["goldWithoutGST"] = gold_without_gst
+                updated = True
+            if gold_with_gst and gold_with_gst != st.session_state.prices["goldWithGST"]:
+                st.session_state.prices["goldWithGST"] = gold_with_gst
+                updated = True
+            if silver_without_gst and silver_without_gst != st.session_state.prices["silverWithoutGST"]:
+                st.session_state.prices["silverWithoutGST"] = silver_without_gst
+                updated = True
+            if silver_with_gst and silver_with_gst != st.session_state.prices["silverWithGST"]:
+                st.session_state.prices["silverWithGST"] = silver_with_gst
+                updated = True
+                
+            if updated:
+                save_data("daily_prices", st.session_state.prices)
+                st.success("Prices updated successfully!")
+                st.rerun()
         
         st.markdown("---")
         
-        # Display all current prices
-        st.markdown("#### All Current Prices")
-        for display_name, key in price_options.items():
-            value = st.session_state.prices[key]
-            color = "#f59e0b" if "Gold" in display_name else "#6b7280"
-            st.markdown(f"**{display_name}:** ₹{value:,.0f}/gram")
+        # Display current prices
+        st.markdown("#### Current Active Prices")
+        price_display_col1, price_display_col2 = st.columns(2)
+        
+        with price_display_col1:
+            st.markdown("**Gold Prices**")
+            st.write(f"Without GST: ₹{st.session_state.prices['goldWithoutGST']:,.2f}/g")
+            st.write(f"With GST: ₹{st.session_state.prices['goldWithGST']:,.2f}/g")
+        
+        with price_display_col2:
+            st.markdown("**Silver Prices**")
+            st.write(f"Without GST: ₹{st.session_state.prices['silverWithoutGST']:,.2f}/g")
+            st.write(f"With GST: ₹{st.session_state.prices['silverWithGST']:,.2f}/g")
         
         st.markdown("---")
         
-        # Reset button with peacock green styling
+        # Reset button
         reset_css = """
         <style>
         .element-container:has(#reset_prices) button {
@@ -818,7 +793,6 @@ def history_tab():
         st.markdown("### History")
         
         if st.session_state.history:
-            # Clear all button with peacock green styling
             clear_css = """
             <style>
             .element-container:has(#clear_history) button {
@@ -875,10 +849,10 @@ def main():
         daily_price_input()
         return
     
-    # Header - moved to header area and aligned left
+    # Enhanced Header with adjusted font sizes
     st.markdown('''
     <div class="header-title">
-        <h1>SSS Jewelry Calculator</h1>
+        <h1>SSS <span class="small">Jewelry Calculator</span></h1>
         <p>Professional jewelry pricing tool</p>
     </div>
     ''', unsafe_allow_html=True)
