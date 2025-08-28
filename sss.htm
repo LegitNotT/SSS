@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSS Jewelry Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f766e, #0891b2);
+        }
+
+        .container {
+            min-height: 100vh;
+        }
+
+        .initial-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .initial-card {
+            width: 100%;
+            max-width: 28rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 1.5rem;
+        }
+
+        .initial-card h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #0f766e;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            border: 1px solid #d1d5db;
+            background: #f9fafb;
+            font-size: 1rem;
+        }
+
+        .input-field:focus {
+            outline: none;
+            ring: 2px solid #0d9488;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: #0f766e;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: #0d5f5f;
+        }
+
+        .header {
+            background: rgba(15, 118, 110, 0.9);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .header-subtitle {
+            font-size: 0.875rem;
+            color: #a7f3d0;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: rgba(13, 148, 136, 0.5);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #a7f3d0;
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-bottom: 2px solid white;
+        }
+
+        .tab-btn:hover {
+            color: white;
+        }
+
+        .content {
+            padding: 1rem;
+        }
+
+        .card {
+            max-width: 28rem;
+            margin: 0 auto;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .material-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .material-group {
+            background: #f3f4f6;
+            border-radius: 0.75rem;
+            padding: 0.25rem;
+            display: flex;
+        }
+
+        .material-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .material-btn.gold.active {
+            background: #eab308;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .material-btn.silver.active {
+            background: #6b7280;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .material-btn:not(.active) {
+            color: #4b5563;
+            background: transparent;
+        }
+
+        .result-widget {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: linear-gradient(to right, #f0fdfa, #ecfeff);
+            border-radius: 0.75rem;
+            border: 1px solid #5eead4;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: #0d9488;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0f766e;
+        }
+
+        .weight-section {
+            margin-bottom: 1rem;
+        }
+
+        .weight-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .weight-input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background: #f3f4f6;
+            font-size: 2rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            border: none;
+        }
+
+        .weight-input:focus {
+            outline: none;
+            ring: 2px solid #0d9488;
+        }
+
+        .gst-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 0.75rem;
+        }
+
+        .toggle-switch {
+            width: 3rem;
+            height: 1.5rem;
+            border-radius: 9999px;
+            padding: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch.on {
+            background: #0d9488;
+        }
+
+        .toggle-switch.off {
+            background: #d1d5db;
+        }
+
+        .toggle-knob {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: white;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.on .toggle-knob {
+            transform: translateX(1.5rem);
+        }
+
+        .number-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .number-btn {
+            aspect-ratio: 1;
+            border-radius: 0.75rem;
+            background: #f9fafb;
+            border: none;
+            font-size: 1.25rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .number-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .number-btn.delete {
+            background: #f97316;
+            color: white;
+        }
+
+        .number-btn.delete:hover {
+            background: #ea580c;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(to right, #0d9488, #14b8a6);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .calculate-btn:hover {
+            background: linear-gradient(to right, #0f766e, #0d9488);
+        }
+
+        .preview {
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        .preview-text {
+            font-size: 0.875rem;
+            color: #4b5563;
+            font-family: 'Courier New', monospace;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-clear {
+            flex: 1;
+            background: #ef4444;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            flex: 1;
+            background: #10b981;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .wages-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .wages-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            background: #0f766e;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wages-table {
+            margin-bottom: 1.5rem;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4b5563;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .wage-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.75rem;
+        }
+
+        .wage-row:hover {
+            background: #f3f4f6;
+        }
+
+        .wage-row.selected {
+            background: #f0fdfa;
+            border: 2px solid #5eead4;
+        }
+
+        .wage-input {
+            font-size: 0.875rem;
+            background: transparent;
+            border: none;
+            width: 100%;
+        }
+
+        .wage-input:focus {
+            outline: none;
+        }
+
+        .delete-btn {
+            color: #ef4444;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .selected-wage {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f0fdfa;
+            border-radius: 0.75rem;
+        }
+
+        .selected-wage-text {
+            font-size: 0.875rem;
+            color: #0f766e;
+        }
+
+        .price-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .price-item.gold {
+            background: #fefce8;
+        }
+
+        .price-item.silver {
+            background: #f9fafb;
+        }
+
+        .price-indicator {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+        }
+
+        .price-indicator.gold {
+            background: #eab308;
+        }
+
+        .price-indicator.silver {
+            background: #6b7280;
+        }
+
+        .price-content {
+            flex: 1;
+        }
+
+        .price-label {
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .price-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .currency {
+            font-size: 1.125rem;
+        }
+
+        .price-input {
+            font-size: 1.25rem;
+            font-weight: bold;
+            background: transparent;
+            border: none;
+            padding: 0.5rem;
+        }
+
+        .price-input:focus {
+            outline: none;
+            ring: 2px solid #0d9488;
+            border-radius: 0.25rem;
+        }
+
+        .reset-btn {
+            width: 100%;
+            background: #0f766e;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .clear-history {
+            color: #dc2626;
+            font-size: 0.875rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 2rem 0;
+            color: #9ca3af;
+        }
+
+        .history-icon {
+            width: 3rem;
+            height: 3rem;
+            margin: 0 auto 0.5rem;
+            opacity: 0.5;
+        }
+
+        .history-list {
+            max-height: 24rem;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .material-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .material-tag.gold {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .material-tag.silver {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .history-amount {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .history-timestamp {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Initial Input Screen -->
+        <div id="initialScreen" class="initial-screen">
+            <div class="initial-card">
+                <h1>Good Morning!</h1>
+                <div>
+                    <div class="input-group">
+                        <label class="input-label">Gold Price (without GST)</label>
+                        <input type="number" id="goldWithoutGST" class="input-field" placeholder="₹ per gram">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Gold Price (with GST)</label>
+                        <input type="number" id="goldWithGST" class="input-field" placeholder="₹ per gram">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Silver Price (without GST)</label>
+                        <input type="number" id="silverWithoutGST" class="input-field" placeholder="₹ per gram">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Silver Price (with GST)</label>
+                        <input type="number" id="silverWithGST" class="input-field" placeholder="₹ per gram">
+                    </div>
+                    <button class="btn-primary" onclick="handleInitialSubmit()">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div id="mainApp" class="hidden">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-title">
+                        <h1>SSS</h1>
+                        <span class="header-subtitle">Jewelry Calculator</span>
+                    </div>
+                </div>
+                
+                <!-- Tab Navigation -->
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="switchTab('calculator')" data-tab="calculator">
+                        📱 Calculator
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('wages')" data-tab="wages">
+                        ⚙️ Wages
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('prices')" data-tab="prices">
+                        💲 Prices
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('history')" data-tab="history">
+                        📋 History
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content">
+                
+                <!-- Calculator Tab -->
+                <div id="calculatorTab" class="tab-content active">
+                    <div class="card">
+                        <!-- Material Selection -->
+                        <div class="material-selector">
+                            <div class="material-group">
+                                <button class="material-btn gold active" onclick="setMaterial('gold')">Gold</button>
+                                <button class="material-btn silver" onclick="setMaterial('silver')">Silver</button>
+                            </div>
+                        </div>
+
+                        <!-- Result Widget -->
+                        <div id="resultWidget" class="result-widget hidden">
+                            <div class="result-label">Calculated Price</div>
+                            <div id="resultAmount" class="result-amount">₹0</div>
+                        </div>
+
+                        <!-- Weight Input -->
+                        <div class="weight-section">
+                            <p class="weight-label">Weight (grams)</p>
+                            <input type="number" id="weightInput" class="weight-input" placeholder="0" oninput="updatePreview()">
+                        </div>
+
+                        <!-- GST Toggle -->
+                        <div class="gst-toggle">
+                            <span>Include GST</span>
+                            <div class="toggle-switch on" onclick="toggleGST()" id="gstToggle">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+
+                        <!-- Number Pad -->
+                        <div class="number-pad">
+                            <button class="number-btn" onclick="addDigit('1')">1</button>
+                            <button class="number-btn" onclick="addDigit('2')">2</button>
+                            <button class="number-btn" onclick="addDigit('3')">3</button>
+                            <button class="number-btn" onclick="addDigit('4')">4</button>
+                            <button class="number-btn" onclick="addDigit('5')">5</button>
+                            <button class="number-btn" onclick="addDigit('6')">6</button>
+                            <button class="number-btn" onclick="addDigit('7')">7</button>
+                            <button class="number-btn" onclick="addDigit('8')">8</button>
+                            <button class="number-btn" onclick="addDigit('9')">9</button>
+                            <button class="number-btn" onclick="addDigit('.')">.</button>
+                            <button class="number-btn" onclick="addDigit('0')">0</button>
+                            <button class="number-btn delete" onclick="deleteDigit()">⌫</button>
+                        </div>
+
+                        <!-- Calculate Button -->
+                        <button class="calculate-btn" onclick="calculate()">Calculate</button>
+
+                        <!-- Calculation Preview -->
+                        <div id="calculationPreview" class="preview hidden">
+                            <p id="previewText" class="preview-text"></p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div id="actionButtons" class="card hidden">
+                        <div class="action-buttons">
+                            <button class="btn-clear" onclick="clearCalculation()">Clear</button>
+                            <button class="btn-save" onclick="saveToHistory()">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wages Tab -->
+                <div id="wagesTab" class="tab-content">
+                    <div class="card">
+                        <div class="wages-header">
+                            <h2 class="wages-title">Making Charges</h2>
+                            <button class="add-btn" onclick="addWageEntry()">+ Add</button>
+                        </div>
+                        
+                        <div class="wages-table">
+                            <div class="table-header">
+                                <span>Sr.</span>
+                                <span>Material</span>
+                                <span>Rate</span>
+                                <span>Del</span>
+                            </div>
+                            
+                            <div id="wagesList"></div>
+                        </div>
+                        
+                        <div id="selectedWageInfo" class="selected-wage">
+                            <p class="selected-wage-text">Selected: <span id="selectedWageName">Gold</span> (Rate: <span id="selectedWageRate">22</span>/g)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prices Tab -->
+                <div id="pricesTab" class="tab-content">
+                    <div class="card">
+                        <h2 class="wages-title" style="text-align: center; margin-bottom: 1.5rem;">Current Prices</h2>
+                        
+                        <div>
+                            <div class="price-item gold">
+                                <div class="price-indicator gold"></div>
+                                <div class="price-content">
+                                    <p class="price-label">Gold (No GST)</p>
+                                    <div class="price-input-group">
+                                        <span class="currency">₹</span>
+                                        <input type="number" id="editGoldWithoutGST" class="price-input" onchange="updatePrice('goldWithoutGST', this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="price-item gold">
+                                <div class="price-indicator gold"></div>
+                                <div class="price-content">
+                                    <p class="price-label">Gold (With GST)</p>
+                                    <div class="price-input-group">
+                                        <span class="currency">₹</span>
+                                        <input type="number" id="editGoldWithGST" class="price-input" onchange="updatePrice('goldWithGST', this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="price-item silver">
+                                <div class="price-indicator silver"></div>
+                                <div class="price-content">
+                                    <p class="price-label">Silver (No GST)</p>
+                                    <div class="price-input-group">
+                                        <span class="currency">₹</span>
+                                        <input type="number" id="editSilverWithoutGST" class="price-input" onchange="updatePrice('silverWithoutGST', this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="price-item silver">
+                                <div class="price-indicator silver"></div>
+                                <div class="price-content">
+                                    <p class="price-label">Silver (With GST)</p>
+                                    <div class="price-input-group">
+                                        <span class="currency">₹</span>
+                                        <input type="number" id="editSilverWithGST" class="price-input" onchange="updatePrice('silverWithGST', this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="reset-btn" onclick="resetPrices()">Reset Daily Prices</button>
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div id="historyTab" class="tab-content">
+                    <div class="card">
+                        <div class="history-header">
+                            <h2 class="wages-title">History</h2>
+                            <button id="clearHistoryBtn" class="clear-history hidden" onclick="clearHistory()">Clear All</button>
+                        </div>
+                        
+                        <div id="historyEmpty" class="empty-history">
+                            <div class="history-icon">📋</div>
+                            <p>No calculations saved</p>
+                        </div>
+                        
+                        <div id="historyList" class="history-list hidden"></div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let prices = {
+            goldWithoutGST: '',
+            goldWithGST: '',
+            silverWithoutGST: '',
+            silverWithGST: ''
+        };
+        
+        let currentMaterial = 'gold';
+        let includeGST = true;
+        let selectedWage = { id: 'gold', material: 'Gold', rate: 22 };
+        let wagesList = [
+            { id: 'gold', srNo: 1, material: 'Gold', rate: 22 },
+            { id: 'silver', srNo: 2, material: 'Silver', rate: 17 }
+        ];
+        let calculationResult = null;
+        let history = [];
+
+        // Initial setup
+        function handleInitialSubmit() {
+            prices.goldWithoutGST = document.getElementById('goldWithoutGST').value;
+            prices.goldWithGST = document.getElementById('goldWithGST').value;
+            prices.silverWithoutGST = document.getElementById('silverWithoutGST').value;
+            prices.silverWithGST = document.getElementById('silverWithGST').value;
+            
+            if (prices.goldWithoutGST && prices.goldWithGST && prices.silverWithoutGST && prices.silverWithGST) {
+                document.getElementById('initialScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                updatePriceInputs();
+                renderWagesList();
+            }
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Remove active class from all tabs and buttons
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to selected tab and button
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        }
+
+        // Material selection
+        function setMaterial(material) {
+            currentMaterial = material;
+            document.querySelectorAll('.material-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.material-btn.${material}`).classList.add('active');
+            
+            // Auto-select corresponding wage
+            const correspondingWage = wagesList.find(wage => wage.material.toLowerCase() === material);
+            if (correspondingWage) {
+                selectWage(correspondingWage);
+            }
+            
+            updatePreview();
+        }
+
+        // Number pad functions
+        function addDigit(digit) {
+            const input = document.getElementById('weightInput');
+            if (digit === '.' && input.value.includes('.')) return;
+            if (input.value === '0' && digit !== '.') {
+                input.value = digit;
+            } else {
+                input.value += digit;
+            }
+            updatePreview();
+        }
+
+        function deleteDigit() {
+            const input = document.getElementById('weightInput');
+            if (input.value.length > 1) {
+                input.value = input.value.slice(0, -1);
+            } else {
+                input.value = '';
+            }
+            updatePreview();
+        }
+
+        // Update calculation preview
+        function updatePreview() {
+            const weight = document.getElementById('weightInput').value;
+            const preview = document.getElementById('calculationPreview');
+            const previewText = document.getElementById('previewText');
+            
+            if (weight && prices.goldWithoutGST) {
+                const weightNum = parseFloat(weight) || 0;
+                const pricePerGram = currentMaterial === 'gold' 
+                    ? (includeGST ? parseFloat(prices.goldWithGST) : parseFloat(prices.goldWithoutGST))
+                    : (includeGST ? parseFloat(prices.silverWithGST) : parseFloat(prices.silverWithoutGST));
+                const total = (selectedWage.rate * weightNum) + (pricePerGram * weightNum);
+                
+                previewText.textContent = `[ ${selectedWage.rate}/g × ${weightNum}g ] + [ ₹${pricePerGram}/g × ${weightNum}g ] = ₹${total.toLocaleString()}`;
+                preview.classList.remove('hidden');
+            } else {
+                preview.classList.add('hidden');
+            }
+        }
+
+        // Calculate
+        function calculate() {
+            const weight = document.getElementById('weightInput').value;
+            if (!weight || !prices.goldWithoutGST) return;
+            
+            const weightNum = parseFloat(weight);
+            const pricePerGram = currentMaterial === 'gold' 
+                ? (includeGST ? parseFloat(prices.goldWithGST) : parseFloat(prices.goldWithoutGST))
+                : (includeGST ? parseFloat(prices.silverWithGST) : parseFloat(prices.silverWithoutGST));
+            
+            const wagesCost = selectedWage.rate * weightNum;
+            const materialCost = pricePerGram * weightNum;
+            const total = wagesCost + materialCost;
+            
+            calculationResult = { 
+                weight: weightNum, 
+                pricePerGram, 
+                wageRate: selectedWage.rate,
+                wagesCost: wagesCost,
+                materialCost: materialCost,
+                total, 
+                material: currentMaterial, 
+                includeGST,
+                wageMaterial: selectedWage.material
+            };
+            
+            // Show result
+            document.getElementById('resultWidget').classList.remove('hidden');
+            document.getElementById('resultAmount').textContent = `₹${total.toLocaleString()}`;
+            document.getElementById('actionButtons').classList.remove('hidden');
+        }
+
+        // Clear calculation
+        function clearCalculation() {
+            document.getElementById('weightInput').value = '';
+            document.getElementById('resultWidget').classList.add('hidden');
+            document.getElementById('actionButtons').classList.add('hidden');
+            document.getElementById('calculationPreview').classList.add('hidden');
+            calculationResult = null;
+        }
+
+        // Save to history
+        function saveToHistory() {
+            if (calculationResult) {
+                const newEntry = { 
+                    ...calculationResult, 
+                    timestamp: new Date().toLocaleString(), 
+                    id: Date.now() 
+                };
+                history.unshift(newEntry);
+                clearCalculation();
+                renderHistory();
+            }
+        }
+
+        // Wages management
+        function addWageEntry() {
+            const newEntry = {
+                id: Date.now(),
+                srNo: wagesList.length + 1,
+                material: `Item ${wagesList.length + 1}`,
+                rate: 10
+            };
+            wagesList.push(newEntry);
+            renderWagesList();
+        }
+
+        function deleteWageEntry(id) {
+            if (wagesList.length <= 2) return; // Keep at least Gold and Silver
+            
+            wagesList = wagesList.filter(wage => wage.id !== id);
+            wagesList = wagesList.map((wage, index) => ({ ...wage, srNo: index + 1 }));
+            
+            if (selectedWage.id === id) {
+                selectedWage = wagesList[0];
+                updateSelectedWageInfo();
+            }
+            renderWagesList();
+        }
+
+        function updateWageEntry(id, field, value) {
+            wagesList = wagesList.map(wage => 
+                wage.id === id ? { ...wage, [field]: value } : wage
+            );
+            if (selectedWage.id === id) {
+                selectedWage = { ...selectedWage, [field]: value };
+                updateSelectedWageInfo();
+            }
+            updatePreview();
+        }
+
+        function selectWage(wage) {
+            selectedWage = wage;
+            updateSelectedWageInfo();
+            renderWagesList();
+            updatePreview();
+        }
+
+        function updateSelectedWageInfo() {
+            document.getElementById('selectedWageName').textContent = selectedWage.material;
+            document.getElementById('selectedWageRate').textContent = selectedWage.rate;
+        }
+
+        function renderWagesList() {
+            const container = document.getElementById('wagesList');
+            container.innerHTML = '';
+            
+            wagesList.forEach(wage => {
+                const row = document.createElement('div');
+                row.className = `wage-row ${selectedWage.id === wage.id ? 'selected' : ''}`;
+                row.onclick = () => selectWage(wage);
+                
+                const canDelete = wagesList.length > 2 && !['gold', 'silver'].includes(wage.id);
+                
+                row.innerHTML = `
+                    <span>${wage.srNo}</span>
+                    <input type="text" class="wage-input" value="${wage.material}" 
+                           onchange="updateWageEntry('${wage.id}', 'material', this.value)"
+                           onclick="event.stopPropagation()">
+                    <input type="number" class="wage-input" value="${wage.rate}" 
+                           onchange="updateWageEntry('${wage.id}', 'rate', Number(this.value))"
+                           onclick="event.stopPropagation()">
+                    <button class="delete-btn" onclick="event.stopPropagation(); deleteWageEntry('${wage.id}')"
+                            ${!canDelete ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}>🗑️</button>
+                `;
+                
+                container.appendChild(row);
+            });
+        }
+
+        // Price management
+        function updatePrice(key, value) {
+            prices[key] = value;
+            updatePreview();
+        }
+
+        function updatePriceInputs() {
+            document.getElementById('editGoldWithoutGST').value = prices.goldWithoutGST;
+            document.getElementById('editGoldWithGST').value = prices.goldWithGST;
+            document.getElementById('editSilverWithoutGST').value = prices.silverWithoutGST;
+            document.getElementById('editSilverWithGST').value = prices.silverWithGST;
+        }
+
+        function resetPrices() {
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('initialScreen').classList.remove('hidden');
+            
+            // Clear the initial form
+            document.getElementById('goldWithoutGST').value = '';
+            document.getElementById('goldWithGST').value = '';
+            document.getElementById('silverWithoutGST').value = '';
+            document.getElementById('silverWithGST').value = '';
+        }
+
+        // History management
+        function renderHistory() {
+            const emptyDiv = document.getElementById('historyEmpty');
+            const listDiv = document.getElementById('historyList');
+            const clearBtn = document.getElementById('clearHistoryBtn');
+            
+            if (history.length === 0) {
+                emptyDiv.classList.remove('hidden');
+                listDiv.classList.add('hidden');
+                clearBtn.classList.add('hidden');
+            } else {
+                emptyDiv.classList.add('hidden');
+                listDiv.classList.remove('hidden');
+                clearBtn.classList.remove('hidden');
+                
+                listDiv.innerHTML = '';
+                history.forEach(entry => {
+                    const item = document.createElement('div');
+                    item.className = 'history-item';
+                    
+                    item.innerHTML = `
+                        <div class="history-item-header">
+                            <span class="material-tag ${entry.material}">
+                                ${entry.material.toUpperCase()} ${entry.weight}g
+                            </span>
+                            <span class="history-amount">₹${entry.total.toLocaleString()}</span>
+                        </div>
+                        <p class="history-timestamp">${entry.timestamp}</p>
+                    `;
+                    
+                    listDiv.appendChild(item);
+                });
+            }
+        }
+
+        function clearHistory() {
+            history = [];
+            renderHistory();
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderWagesList();
+            updateSelectedWageInfo();
+            renderHistory();
+        });
+
+        // GST toggle
+        function toggleGST() {
+            includeGST = !includeGST;
+            const toggle = document.getElementById('gstToggle');
+            if (includeGST) {
+                toggle.classList.add('on');
+                toggle.classList.remove('off');
+            } else {
+                toggle.classList.add('off');
+                toggle.classList.remove('on');
+            }
+	    updatePreview();
+        }
+    </script>
+</body>
+</html>
